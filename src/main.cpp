@@ -277,6 +277,9 @@ void State::get_legal_actions() {
     this->legal_actions = all_actions;
 }
 
+static std::string y_axis = "654321";
+static std::string x_axis = "ABCDE";
+
 void make_seperate_line(std::stringstream &ss) {
     ss << "├";
     for (int w = 0; w < BOARD_W; w += 1) {
@@ -291,7 +294,7 @@ void add_axis(std::stringstream &ss) {
     for (int w = 0; w < BOARD_W; w += 1) {
         for (int h = 0; h < PIECE_STR_LEN / 2; h += 1)
             ss << " ";
-        ss << " " << w << " ";
+        ss << " " << x_axis[w] << " ";
         for (int h = 0; h < PIECE_STR_LEN / 2 - (PIECE_STR_LEN + 1) % 2; h += 1)
             ss << " ";
         ss << "│";
@@ -325,7 +328,7 @@ std::string State::encode_output() {
                 ss << std::string(PIECE_TABLE[0][0]) << " ";
             }
         }
-        ss << "│ │ " << i << " │\n";
+        ss << "│ │ " << y_axis[i] << " │\n";
         make_seperate_line(ss);
     }
     make_seperate_line(ss);
@@ -406,6 +409,7 @@ bool valid_move(Move move, std::vector<Move> &legal_moves) {
 }
 
 static const int material_table[7] = { 0, 2, 6, 7, 8, 20, 100 };
+
 int main(int argc, char **argv) {
     assert(argc == 3);
     std::ofstream log("gamelog.txt");
@@ -425,6 +429,7 @@ int main(int argc, char **argv) {
         // std::cout << "test\n";
         // Output current state
         std::cout << step << " step" << std::endl;
+        log << step << " step" << std::endl;
         data = game.encode_output();
         std::cout << data << std::endl;
         log << data << std::endl;
@@ -463,16 +468,24 @@ int main(int argc, char **argv) {
         // Take action
         if (!valid_move(action, game.legal_actions)) {
             // If action is invalid.
-            std::cout << "Invalid Action\n";
-            std::cout << action.first.first << " " << action.first.second << " " << action.second.first << " " << action.second.second << "\n";
             data = game.encode_output();
+            std::cout << "Invalid Action\n";
+            std::cout << x_axis[action.first.second] << y_axis[action.first.first] << " → "
+                      << x_axis[action.second.second] << y_axis[action.second.first] << "\n";
             std::cout << data;
+            log << "Invalid Action\n";
+            log << x_axis[action.first.second] << y_axis[action.first.first] << " → "
+                << x_axis[action.second.second] << y_axis[action.second.first] << "\n";
             log << data;
             break;
         } else {
             temp = game.next_state(action);
             std::cout << "Depth: " << total << std::endl;
-            std::cout << action.first.first << " " << action.first.second << " " << action.second.first << " " << action.second.second << "\n";
+            std::cout << x_axis[action.first.second] << y_axis[action.first.first] << " → "
+                      << x_axis[action.second.second] << y_axis[action.second.first] << "\n";
+            log << "Depth: " << total << std::endl;
+            log << x_axis[action.first.second] << y_axis[action.first.first] << " → "
+                << x_axis[action.second.second] << y_axis[action.second.first] << "\n";
         }
         game = *temp;
 
@@ -503,16 +516,19 @@ int main(int argc, char **argv) {
             }
         }
     }
-    log.close();
 
     data = game.encode_output();
     std::cout << data << std::endl;
     log << data << std::endl;
-    if (game.game_state == WIN)
+    if (game.game_state == WIN) {
         std::cout << "Player" << game.player + 1 << " wins\n";
-    else
+        log << "Player" << game.player + 1 << " wins\n";
+    } else {
         std::cout << "Draw\n";
+        log << "Draw\n";
+    }
 
+    log.close();
     // Reset state file
     if (remove(file_state.c_str()) != 0)
         std::cerr << "Error removing file: " << file_state << "\n";

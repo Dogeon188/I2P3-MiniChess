@@ -80,7 +80,7 @@ static const int move_table_king[8][2] = {
  *
  */
 void State::get_legal_actions() {
-    // [TODO] [Optional]
+    // [Optional]
     // This method is not very efficient
     // You can redesign it
     this->game_state = NONE;
@@ -226,6 +226,10 @@ void State::get_legal_actions() {
     this->legal_actions = all_actions;
 }
 
+const char piece_table[2][7][5] = {
+    { " ", "♙", "♖", "♘", "♗", "♕", "♔" },
+    { " ", "♟", "♜", "♞", "♝", "♛", "♚" }
+};
 /**
  * @brief encode the output for command line output
  *
@@ -237,9 +241,9 @@ std::string State::encode_output() {
     for (int i = 0; i < BOARD_H; i += 1) {
         for (int j = 0; j < BOARD_W; j += 1) {
             if ((now_piece = this->board.board[0][i][j])) {
-                ss << std::string(PIECE_TABLE[0][now_piece]);
+                ss << std::string(piece_table[0][now_piece]);
             } else if ((now_piece = this->board.board[1][i][j])) {
-                ss << std::string(PIECE_TABLE[1][now_piece]);
+                ss << std::string(piece_table[1][now_piece]);
             } else {
                 ss << " ";
             }

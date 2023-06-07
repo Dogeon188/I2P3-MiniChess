@@ -3,6 +3,8 @@ build/
 gamelog.txt
 action
 state
-!state/
 document/
+baselines/
+run.bat
+!state/
 ~$*
