@@ -5,14 +5,34 @@
 #include "../config.hpp"
 #include "./state.hpp"
 
+// [TODO] design your own evaluation function
 /**
- * @brief evaluate the state
+ * @brief 1st iteration: naive approach,
+ * different piece has different score,
+ * sum them up to get state score.
  *
- * @return int
+ * @return sum of piece score
  */
-int State::evaluate() {
-    // [TODO] design your own evaluation function
-    return 0;
+int State::evaluatePSS() {
+    // 1st iteration: naive approach
+    //                                     ♟ ♜ ♞  ♝ ♛   ♚
+    static const int piece_value[7] = { 0, 2, 6, 7, 8, 20, 100 };
+    int value = 0;
+    for (int i = 0; i < BOARD_H; i += 1) {
+        for (int j = 0; j < BOARD_W; j += 1) {
+            // player
+            int now_piece = this->board.board[1 - this->player][i][j];
+            if (now_piece) {
+                value += piece_value[now_piece];
+            }
+            // opponent
+            now_piece = this->board.board[this->player][i][j];
+            if (now_piece) {
+                value -= piece_value[now_piece];
+            }
+        }
+    }
+    return value;
 }
 
 /**

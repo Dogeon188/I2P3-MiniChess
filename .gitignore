@@ -6,5 +6,6 @@ state
 document/
 baselines/
 run.bat
+TODO.md
 !state/
 ~$*
