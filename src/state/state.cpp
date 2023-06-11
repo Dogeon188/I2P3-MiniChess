@@ -21,12 +21,12 @@ int State::evaluatePSS() {
     for (int i = 0; i < BOARD_H; i += 1) {
         for (int j = 0; j < BOARD_W; j += 1) {
             // player
-            int now_piece = this->board.board[1 - this->player][i][j];
+            int now_piece = this->board.board[this->player][i][j];
             if (now_piece) {
                 value += piece_value[now_piece];
             }
             // opponent
-            now_piece = this->board.board[this->player][i][j];
+            now_piece = this->board.board[1 - this->player][i][j];
             if (now_piece) {
                 value -= piece_value[now_piece];
             }
