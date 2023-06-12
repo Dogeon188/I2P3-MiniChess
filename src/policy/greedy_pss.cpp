@@ -16,7 +16,7 @@ Move GreedyPSS::get_move(State *state, int depth) {
 
     // find min instead of max since the state evaluation is of opponent
     int min_value = depth + 100000;
-    Move *min_action = nullptr;
+    Move *min_action = &state->legal_actions[0];
     for (auto &action : state->legal_actions) {
         auto next_state = state->next_state(action);
         int value = next_state->evaluatePSS();

@@ -1,6 +1,7 @@
 .vscode/
 build/
 gamelog.txt
+log/
 action
 state
 document/
