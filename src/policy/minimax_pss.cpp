@@ -3,6 +3,9 @@
 #include "../state/state.hpp"
 #include "./minimax_pss.hpp"
 
+#define NEGINF -1000000
+#define POSINF 1000000
+
 /**
  * @brief Internal search function for minimax
  *
@@ -13,21 +16,25 @@
  * @return pair(stateValue, move)
  */
 std::pair<int, Move> MinimaxPSS::_get_move(State *state, int depth, bool isMax) {
-    if (depth == 0) {
-        return std::make_pair(state->evaluatePSS(), Move());
-    }
-
     if (!state->legal_actions.size())
         state->get_legal_actions();
-    
+
     if (state->game_state == WIN) {
         if (isMax)
-            return std::make_pair(100000, state->legal_actions.back());
+            return std::make_pair(POSINF, state->legal_actions.back());
         else
-            return std::make_pair(-100000, state->legal_actions.back());
+            return std::make_pair(NEGINF, state->legal_actions.back());
+    }
+    // we don't quite want draw
+    if (state->game_state == DRAW) {
+        return std::make_pair(isMax ? -5000 : 5000, state->legal_actions.back());
+    }
+    if (depth == 0) {
+        // negative when calculation is based on opponent
+        return std::make_pair(state->evaluatePSS() * (isMax ? 1 : -1), state->legal_actions.back());
     }
 
-    int best_value = isMax ? -100000 : 100000;
+    int best_value = isMax ? NEGINF : POSINF;
     Move best_move;
     for (auto &action : state->legal_actions) {
         auto next_state = state->next_state(action);

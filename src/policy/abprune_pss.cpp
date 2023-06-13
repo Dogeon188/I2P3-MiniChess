@@ -24,6 +24,7 @@ std::pair<int, Move> ABPrunePSS::_get_move(State *state, int depth, int ᶐ, int
     if (state->game_state == WIN) {
         return std::make_pair(isMax ? POSINF : NEGINF, state->legal_actions.back());
     }
+    // we don't quite want draw
     if (state->game_state == DRAW) {
         return std::make_pair(isMax ? -5000 : 5000, state->legal_actions.back());
     }
