@@ -11,7 +11,7 @@
  *
  * @param state Now state
  * @param depth search depth limit
- * @param isMax is maximizing player
+ * @param isMax is maximizing player aka our AI
  * @param ᶐ alpha, best value for maximizing player
  * @param β beta, best value for minimizing player
  *
@@ -28,7 +28,8 @@ std::pair<int, Move> ABPrunePSS::_get_move(State *state, int depth, int ᶐ, int
         return std::make_pair(isMax ? -5000 : 5000, state->legal_actions.back());
     }
     if (depth == 0) {
-        return std::make_pair(state->evaluatePSS(), state->legal_actions.back());
+        // negative when calculation is based on opponent
+        return std::make_pair(state->evaluatePSS() * (isMax ? 1 : -1), state->legal_actions.back());
     }
 
     int best_value = isMax ? NEGINF : POSINF;
