@@ -15,7 +15,7 @@
  */
 int State::evaluatePSS() {
     // 1st iteration: naive approach
-    //                                     ♟ ♜ ♞  ♝ ♛   ♚
+    //                                    P♟R♜ N♞B♝ Q♛  K♚
     static const int piece_value[7] = { 0, 2, 6, 7, 8, 20, 300 };
     int value = 0;
     for (int i = 0; i < BOARD_H; i += 1) {

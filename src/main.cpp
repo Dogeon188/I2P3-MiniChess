@@ -514,6 +514,10 @@ int main(int argc, char **argv) {
             } else {
                 game.game_state = DRAW;
             }
+            std::cout << "White: " << white_material << std::endl
+                      << "Black: " << black_material << std::endl;
+            log << "White: " << white_material << std::endl
+                << "Black: " << black_material << std::endl;
         }
     }
 

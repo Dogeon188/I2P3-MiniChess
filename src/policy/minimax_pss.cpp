@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <fstream>
 
 #include "../state/state.hpp"
 #include "./minimax_pss.hpp"
