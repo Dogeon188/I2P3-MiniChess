@@ -16,7 +16,7 @@
 int State::evaluatePSS() {
     // 1st iteration: naive approach
     //                                     ♟ ♜ ♞  ♝ ♛   ♚
-    static const int piece_value[7] = { 0, 2, 6, 7, 8, 20, 100 };
+    static const int piece_value[7] = { 0, 2, 6, 7, 8, 20, 300 };
     int value = 0;
     for (int i = 0; i < BOARD_H; i += 1) {
         for (int j = 0; j < BOARD_W; j += 1) {
