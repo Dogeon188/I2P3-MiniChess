@@ -12,13 +12,13 @@
 
 /*Which character/words for pieces*/
 /* By default, the pieces are '♟', '♜', '♞', '♝', '♛', '♚' from unicode*/
-#define PIECE_STR_LEN 1
+#define PIECE_STR_LEN 2
 const char PIECE_TABLE[2][7][5] = {
 #if PIECE_STR_LEN == 1
     { " ", "♟", "♜", "♞", "♝", "♛", "♚" },
     { " ", "♙", "♖", "♘", "♗", "♕", "♔" },
 #elif PIECE_STR_LEN == 2
-    { "  ", "wP", "wR", "wK", "wB", "wQ", "wK" },
-    { "  ", "bP", "bR", "bK", "bB", "bQ", "bK" },
+    { "  ", "wP", "wR", "wN", "wB", "wQ", "wK" },
+    { "  ", "bP", "bR", "bN", "bB", "bQ", "bK" },
 #endif
 };

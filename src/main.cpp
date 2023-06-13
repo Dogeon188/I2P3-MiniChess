@@ -506,10 +506,10 @@ int main(int argc, char **argv) {
                 }
             }
             if (white_material > black_material) {
-                game.player = 1;
+                game.player = 0;
                 game.game_state = WIN;
             } else if (white_material < black_material) {
-                game.player = 0;
+                game.player = 1;
                 game.game_state = WIN;
             } else {
                 game.game_state = DRAW;
