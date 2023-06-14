@@ -22,10 +22,8 @@ void read_board(std::ifstream &fin) {
             for (int j = 0; j < BOARD_W; j++) {
                 int c;
                 fin >> c;
-                // std::cout << c << " ";
                 board.board[pl][i][j] = c;
             }
-            // std::cout << std::endl;
         }
     }
     root = new State(board, player);
@@ -53,7 +51,6 @@ void write_valid_spot(std::ofstream &fout) {
  * @return int
  */
 int main(int, char **argv) {
-    srand(RANDOM_SEED);
     std::ifstream fin(argv[1]);
     std::ofstream fout(argv[2]);
 

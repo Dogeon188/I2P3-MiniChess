@@ -1,5 +1,3 @@
-#include <cstdlib>
-
 #include "../state/state.hpp"
 #include "./greedy_pss.hpp"
 

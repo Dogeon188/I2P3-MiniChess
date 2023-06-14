@@ -22,10 +22,8 @@ void read_board(std::ifstream &fin) {
             for (int j = 0; j < BOARD_W; j++) {
                 int c;
                 fin >> c;
-                // std::cout << c << " ";
                 board.board[pl][i][j] = c;
             }
-            // std::cout << std::endl;
         }
     }
     root = new State(board, player);
@@ -38,17 +36,11 @@ void read_board(std::ifstream &fin) {
  * @param fout
  */
 void write_valid_spot(std::ofstream &fout) {
-    // Keep updating the output until getting killed.
-    while (true) {
-        // Choose a random spot.
-        auto move = Random::get_move(root, 0);
-        fout << move.first.first << " " << move.first.second << " "
-             << move.second.first << " " << move.second.second << std::endl;
-
-        // Remember to flush the output to ensure the last action is written to file.
-        fout.flush();
-        break;
-    }
+    // Choose a random spot.
+    auto move = Random::get_move(root, 0);
+    fout << move.first.first << " " << move.first.second << " "
+         << move.second.first << " " << move.second.second << std::endl;
+    fout.flush();
 }
 
 /**
