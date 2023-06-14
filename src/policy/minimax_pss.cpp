@@ -35,7 +35,7 @@ std::pair<int, Move> MinimaxPSS::_get_move(State *state, int depth, bool isMax) 
     }
 
     int best_value = isMax ? NEGINF : POSINF;
-    Move best_move;
+    Move best_move = state->legal_actions[0];
     for (auto &action : state->legal_actions) {
         auto next_state = state->next_state(action);
         auto value = _get_move(next_state, depth - 1, !isMax).first;
