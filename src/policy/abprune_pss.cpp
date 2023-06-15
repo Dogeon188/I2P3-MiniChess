@@ -38,6 +38,7 @@ std::pair<int, Move> ABPrunePSS::_get_move(State *state, int depth, int ᶐ, int
         for (auto it = state->legal_actions.rbegin(); it != state->legal_actions.rend(); it++) {
             auto next_state = state->next_state(*it);
             auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            delete next_state;
             if (value > best_value) {
                 best_value = value;
                 best_move = *it;
@@ -52,6 +53,7 @@ std::pair<int, Move> ABPrunePSS::_get_move(State *state, int depth, int ᶐ, int
         for (auto &action : state->legal_actions) {
             auto next_state = state->next_state(action);
             auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            delete next_state;
             if (value < best_value) {
                 best_value = value;
                 best_move = action;

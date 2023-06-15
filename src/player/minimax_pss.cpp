@@ -5,9 +5,10 @@
 #include "../policy/minimax_pss.hpp"
 #include "../state/state.hpp"
 
-#define MINIMAX_DEPTH 4
+static const int MINIMAX_DEPTHS[] = { 2, 4, 6 };
+// depth 7 would likely TLE, depth 6 is the limit
 
-State *root;
+State *root = nullptr;
 
 /**
  * @brief Read the board from the file
@@ -38,15 +39,12 @@ void read_board(std::ifstream &fin) {
  * @param fout
  */
 void write_valid_spot(std::ofstream &fout) {
-    auto move = MinimaxPSS::get_move(root, 2);
-    fout << move.first.first << " " << move.first.second << " "
-         << move.second.first << " " << move.second.second << std::endl;
-    fout.flush();
-
-    move = MinimaxPSS::get_move(root, MINIMAX_DEPTH);
-    fout << move.first.first << " " << move.first.second << " "
-         << move.second.first << " " << move.second.second << std::endl;
-    fout.flush();
+    for (auto depth : MINIMAX_DEPTHS) {
+        auto move = MinimaxPSS::get_move(root, depth);
+        fout << move.first.first << " " << move.first.second << " "
+             << move.second.first << " " << move.second.second << std::endl;
+        fout.flush();
+    }
 }
 
 /**
@@ -64,5 +62,6 @@ int main(int, char **argv) {
 
     fin.close();
     fout.close();
+    delete root;
     return 0;
 }

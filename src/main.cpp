@@ -422,7 +422,7 @@ int main(int argc, char **argv) {
 
     State game;
     game.get_legal_actions();
-    State *temp;
+    State *temp = nullptr;
     std::string data;
     int step = 1;
     while (game.game_state == UNKNOWN || game.game_state == NONE) {
@@ -536,5 +536,6 @@ int main(int argc, char **argv) {
     // Reset state file
     if (remove(file_state.c_str()) != 0)
         std::cerr << "Error removing file: " << file_state << "\n";
+    delete temp;
     return 0;
 }

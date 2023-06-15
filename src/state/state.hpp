@@ -7,8 +7,7 @@
 #include <vector>
 
 #include "../config.hpp"
-
-typedef std::pair<size_t, size_t> Point;
+typedef std::pair<int64_t, int64_t> Point;
 typedef std::pair<Point, Point> Move;
 class Board {
 public:
@@ -52,6 +51,10 @@ public:
     State(){};
     State(int player) : player(player){};
     State(Board board) : board(board){};
+    /**
+     * @param board 5*6 piece id array
+     * @param player 0 -> white, 1 -> black
+    */
     State(Board board, int player) : board(board), player(player){};
 
     int evaluatePSS();

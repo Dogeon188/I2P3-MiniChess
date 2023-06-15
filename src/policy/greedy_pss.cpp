@@ -18,6 +18,7 @@ Move GreedyPSS::get_move(State *state, int depth) {
     for (auto &action : state->legal_actions) {
         auto next_state = state->next_state(action);
         int value = next_state->evaluatePSS();
+        delete next_state;
         if (value < min_value) {
             min_value = value;
             min_action = &action;

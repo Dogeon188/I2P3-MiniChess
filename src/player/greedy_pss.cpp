@@ -5,7 +5,7 @@
 #include "../policy/greedy_pss.hpp"
 #include "../state/state.hpp"
 
-State *root;
+State *root = nullptr;
 
 /**
  * @brief Read the board from the file
@@ -59,5 +59,6 @@ int main(int, char **argv) {
 
     fin.close();
     fout.close();
+    delete root;
     return 0;
 }

@@ -5,10 +5,10 @@
 #include "../policy/abprune_pss.hpp"
 #include "../state/state.hpp"
 
-#define MINIMAX_DEPTH_INIT 4
-#define MINIMAX_DEPTH_MAX 10
+static const int MINIMAX_DEPTHS[] = { 6, 8, 10, 11 };
+// limit: 11
 
-State *root;
+State *root = nullptr;
 
 /**
  * @brief Read the board from the file
@@ -39,7 +39,7 @@ void read_board(std::ifstream &fin) {
  * @param fout
  */
 void write_valid_spot(std::ofstream &fout) {
-    for (int depth = MINIMAX_DEPTH_INIT; depth <= MINIMAX_DEPTH_MAX; depth += 2) {
+    for (auto depth : MINIMAX_DEPTHS) {
         auto move = ABPrunePSS::get_move(root, depth);
         fout << move.first.first << " " << move.first.second << " "
              << move.second.first << " " << move.second.second << std::endl;
@@ -62,5 +62,6 @@ int main(int, char **argv) {
 
     fin.close();
     fout.close();
+    delete root;
     return 0;
 }
