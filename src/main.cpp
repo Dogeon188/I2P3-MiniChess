@@ -417,8 +417,10 @@ int main(int argc, char **argv) {
     player_filename[1] = argv[1];
     player_filename[2] = argv[2];
 
-    std::cout << "Player White File: " << player_filename[1] << std::endl;
-    std::cout << "Player Black File: " << player_filename[2] << std::endl;
+    std::cout << "Player White File: " << player_filename[1] << std::endl
+              << "Player Black File: " << player_filename[2] << std::endl;
+    log << "Player White File: " << player_filename[1] << std::endl
+        << "Player Black File: " << player_filename[2] << std::endl;
 
     State game;
     game.get_legal_actions();
@@ -477,6 +479,8 @@ int main(int argc, char **argv) {
             log << x_axis[action.first.second] << y_axis[action.first.first] << " → "
                 << x_axis[action.second.second] << y_axis[action.second.first] << "\n";
             log << data;
+            game.player = 1 - game.player;
+            game.game_state = WIN;
             break;
         } else {
             temp = game.next_state(action);
