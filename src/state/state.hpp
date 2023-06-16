@@ -11,6 +11,7 @@ typedef std::pair<int64_t, int64_t> Point;
 typedef std::pair<Point, Point> Move;
 class Board {
 public:
+    Point king[2] = { { 5, 4 }, { 0, 0 } };
     char board[2][BOARD_H][BOARD_W] = {
         {
             // white
@@ -41,6 +42,7 @@ enum GameState {
 };
 
 class State {
+    int _evaluateKingThreat(int player);
 public:
     // You may want to add more property for a state
     GameState game_state = UNKNOWN;
@@ -58,6 +60,7 @@ public:
     State(Board board, int player) : board(board), player(player){};
 
     int evaluatePSS();
+    int evaluateHCE();
     State *next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
