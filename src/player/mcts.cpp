@@ -5,8 +5,8 @@
 #include "../policy/mcts.hpp"
 #include "../state/state.hpp"
 
-#define MCTS_ITERATION 80000
-#define MCTS_GENERATION 60
+#define MCTS_ITERATION 1000000
+#define MCTS_GENERATION 30
 
 State *root = nullptr;
 

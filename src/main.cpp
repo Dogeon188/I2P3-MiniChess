@@ -539,9 +539,15 @@ int main(int argc, char **argv) {
         std::cout << "Player" << game.player + 1
                   << " (aka " << player_filename[game.player + 1] << ")"
                   << " wins\n";
+        std::cout << "Player" << 2 - game.player
+                  << " (aka " << player_filename[2 - game.player] << ")"
+                  << " loses\n";
         log << "Player" << game.player + 1
             << " (aka " << player_filename[game.player + 1] << ")"
             << " wins\n";
+        log << "Player" << 2 - game.player
+            << " (aka " << player_filename[2 - game.player] << ")"
+            << " loses\n";
     } else {
         std::cout << "Draw\n";
         log << "Draw\n";
