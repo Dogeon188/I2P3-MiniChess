@@ -43,10 +43,12 @@ enum GameState {
 
 class State {
     int _evaluateKingThreat(int player);
+
 public:
     // You may want to add more property for a state
     GameState game_state = UNKNOWN;
     Board board;
+    // 0 -> white, 1 -> black
     int player = 0;
     std::vector<Move> legal_actions;
 
@@ -56,8 +58,9 @@ public:
     /**
      * @param board 5*6 piece id array
      * @param player 0 -> white, 1 -> black
-    */
+     */
     State(Board board, int player) : board(board), player(player){};
+    State(State *state) : board(state->board), player(state->player){};
 
     int evaluatePSS();
     int evaluateHCE();

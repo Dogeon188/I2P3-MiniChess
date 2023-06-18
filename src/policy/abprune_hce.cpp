@@ -10,12 +10,12 @@
  * @param state Now state
  * @param depth search depth limit
  * @param isMax is maximizing player aka our AI
- * @param ᶐ alpha, best value for maximizing player
- * @param β beta, best value for minimizing player
+ * @param alpha alpha, best value for maximizing player
+ * @param beta beta, best value for minimizing player
  *
  * @return pair(stateValue, move)
  */
-std::pair<int, Move> ABPruneHCE::_get_move(State *state, int depth, int ᶐ, int β, bool isMax) {
+std::pair<int, Move> ABPruneHCE::_get_move(State *state, int depth, int alpha, int beta, bool isMax) {
     if (!state->legal_actions.size())
         state->get_legal_actions();
 
@@ -38,30 +38,30 @@ std::pair<int, Move> ABPruneHCE::_get_move(State *state, int depth, int ᶐ, int
         // reverse iterate since win move is put at last
         for (auto it = state->legal_actions.rbegin(); it != state->legal_actions.rend(); it++) {
             auto next_state = state->next_state(*it);
-            auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            auto value = _get_move(next_state, depth - 1, alpha, beta, !isMax).first;
             delete next_state;
             if (value > best_value) {
                 best_value = value;
                 best_move = *it;
             }
-            if (best_value > ᶐ)
-                ᶐ = best_value;
-            if (ᶐ >= β)
+            if (best_value > alpha)
+                alpha = best_value;
+            if (alpha >= beta)
                 return std::make_pair(best_value, best_move);   // alpha cut-off
         }
     } else {
         // non-reverse iterate
         for (auto &action : state->legal_actions) {
             auto next_state = state->next_state(action);
-            auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            auto value = _get_move(next_state, depth - 1, alpha, beta, !isMax).first;
             delete next_state;
             if (value < best_value) {
                 best_value = value;
                 best_move = action;
             }
-            if (best_value < β)
-                β = best_value;
-            if (β <= ᶐ)
+            if (best_value < beta)
+                beta = best_value;
+            if (beta <= alpha)
                 return std::make_pair(best_value, best_move);   // beta cut-off
         }
     }

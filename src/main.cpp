@@ -384,7 +384,11 @@ void launch_executable(std::string filename) {
     system(kill.c_str());
 #elif __linux__
     std::string command = "timeout " + std::to_string(timeout) + "s " + filename + " " + file_state + " " + file_action;
-    system(command.c_str());
+    int sysret = system(command.c_str());
+    if (sysret != 31744 && sysret != 0) {
+        std::cout << "Player crashed!\n";
+        exit(1);
+    }
 #elif __APPLE__
     // May require installing the command by:
     // brew install coreutils
@@ -449,7 +453,10 @@ int main(int argc, char **argv) {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
         system("cls");
 #else
-        system("clear");
+        int sysret = system("clear");
+        if (sysret) {
+            std::cout << "Clear screen failed!\n";
+        }
 #endif
         while (true) {
             int x, y, n, m;

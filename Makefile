@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = --std=c++2a -Wall -Wextra -O3
+CXXFLAGS = --std=c++2a -Wall -Wextra -O3 -g
 
 SOURCES_DIR = src
 UNITTEST_DIR = unittest
@@ -32,7 +32,7 @@ $(BUILD_DIR):
 # build target
 ifeq ($(OS), Windows_NT)
 $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
-	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player_$@.exe $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@.exe $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@.exe $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
@@ -41,7 +41,7 @@ $(TARGET_UNITTEST): %: $(UNITTEST_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(UNITTEST_DIR)/build/$@.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
 else
 $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
-	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player_$@ $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@ $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@ $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
