@@ -5,7 +5,6 @@ log/
 action
 state
 document/
-baselines/
 *.bat
 *.sh
 TODO.md

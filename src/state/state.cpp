@@ -132,12 +132,10 @@ int State::evaluateHCE() {
     int value = 0;
     // piece score
     value += this->evaluatePSS();
-#if HCE_MOBILITY_WEIGHT
-    // mobility
+#if HCE_MOBILITY_WEIGHT   // mobility
     value += this->legal_actions.size() / HCE_MOBILITY_WEIGHT;
 #endif
-#if HCE_KINGTHREAT_WEIGHT
-    // is king threatened
+#if HCE_KINGTHREAT_WEIGHT   // is king threatened
     if (this->board.king[this->player].first != -1) {
         value -= this->_evaluateKingThreat(this->player) * HCE_KINGTHREAT_WEIGHT;
     }

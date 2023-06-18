@@ -536,8 +536,12 @@ int main(int argc, char **argv) {
     std::cout << data << std::endl;
     log << data << std::endl;
     if (game.game_state == WIN) {
-        std::cout << "Player" << game.player + 1 << " wins\n";
-        log << "Player" << game.player + 1 << " wins\n";
+        std::cout << "Player" << game.player + 1
+                  << " (aka " << player_filename[game.player + 1] << ")"
+                  << " wins\n";
+        log << "Player" << game.player + 1
+            << " (aka " << player_filename[game.player + 1] << ")"
+            << " wins\n";
     } else {
         std::cout << "Draw\n";
         log << "Draw\n";
