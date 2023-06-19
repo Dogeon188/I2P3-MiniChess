@@ -124,29 +124,22 @@ int State::_evaluateKingThreat(int player) {
     return value;
 }
 
-#define HCE_MOBILITY_WEIGHT 16   // divided instead of multiplied
-#define HCE_KINGTHREAT_WEIGHT 1
-
 /**
  * @brief 2nd iteration: heuristic approach,
  * added mobility and king threat.
  * @return PSS + (MOB / MOB_WEIGHT) + (KT * KT_WEIGHT)
  */
-int State::evaluateHCE() {
-    int value = 0;
+float State::evaluateHCE(float mobilityWeight, float kingThreatWeight) {
+    float value = 0;
     // piece score
     value += this->evaluatePSS();
-#if HCE_MOBILITY_WEIGHT   // mobility
-    value += this->legal_actions.size() / HCE_MOBILITY_WEIGHT;
-#endif
-#if HCE_KINGTHREAT_WEIGHT   // is king threatened
+    value += (float)this->legal_actions.size() * mobilityWeight;
     if (this->board.king[this->player].first != -1) {
-        value -= this->_evaluateKingThreat(this->player) * HCE_KINGTHREAT_WEIGHT;
+        value -= this->_evaluateKingThreat(this->player) * kingThreatWeight;
     }
     if (this->board.king[1 - this->player].first != -1) {
-        value += this->_evaluateKingThreat(1 - this->player) * HCE_KINGTHREAT_WEIGHT;
+        value += this->_evaluateKingThreat(1 - this->player) * kingThreatWeight;
     }
-#endif
     return value;
 }
 

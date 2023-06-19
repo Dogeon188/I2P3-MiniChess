@@ -15,7 +15,7 @@
  *
  * @return stateValue
  */
-int ABPruneHCE::_evaluate(State *state, int depth, int alpha, int beta, bool isMax) {
+int ABPruneHCE::_evaluate(State *state, int depth, float alpha, float beta, bool isMax) {
     if (!state->legal_actions.size()) state->get_legal_actions();
 
     if (state->game_state == WIN)
@@ -26,7 +26,7 @@ int ABPruneHCE::_evaluate(State *state, int depth, int alpha, int beta, bool isM
     // negative when calculation is based on opponent
     // use HCE to evaluate
     if (depth == 0)
-        return state->evaluateHCE() * (isMax ? 1 : -1);
+        return state->evaluateHCE(0.0625, 1) * (isMax ? 1 : -1);
 
     int best_value = isMax ? NEGINF : POSINF;
     // Move best_move = state->legal_actions[0];   // avoid output 0 0 0 0
@@ -70,9 +70,9 @@ Move ABPruneHCE::get_move(State *state, int depth) {
     if (state->game_state == WIN) return state->legal_actions.back();
     if (state->game_state == DRAW) return state->legal_actions.back();
 
-    int best_value = NEGINF;
-    int alpha = NEGINF;
-    int beta = POSINF;
+    float best_value = NEGINF;
+    float alpha = NEGINF;
+    float beta = POSINF;
 
     Move best_move = state->legal_actions[0];   // avoid output 0 0 0 0
     // reverse iterate since win move is put at last
