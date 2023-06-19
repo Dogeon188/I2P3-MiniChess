@@ -15,6 +15,7 @@ POLICY_DIR = $(SOURCES_DIR)/policy
 
 TARGET_PLAYER = $(PLAYERS:$(SOURCES_DIR)/player/%.cpp=%)
 TARGET_PLAYER_MIXED = mixed
+TARGET_SUBMISSION = submission
 TARGET_MAIN = main
 TARGET_OTHER = selfplay benchmark
 TARGET_UNITTEST = $(UNITTESTS:$(UNITTEST_DIR)/%.cpp=%)
@@ -36,6 +37,8 @@ $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@.exe $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
 $(TARGET_PLAYER_MIXED): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/%.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
+$(TARGET_SUBMISSION):
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/submission.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $(SOURCES_DIR)/player/abprune_hce.cpp
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@.exe $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
@@ -47,6 +50,8 @@ $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@ $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
 $(TARGET_PLAYER_MIXED): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@ $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
+$(TARGET_SUBMISSION):
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/submission $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $(SOURCES_DIR)/player/abprune_hce.cpp
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@ $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
