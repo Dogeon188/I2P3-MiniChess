@@ -2,10 +2,10 @@
 #include "../state/state.hpp"
 
 /**
- * @brief alpha-beta prune + minimax + handcrafted evaluation
+ * @brief alpha-beta prune + minimax + NNUE evaluation
  */
 class ABPruneNNUE {
-    static std::pair<int, Move> _get_move(State *state, int depth, int alpha, int beta, bool isMax);
+    static float _evaluate(State *state, int depth, int alpha, int beta, bool isMax);
 
 public:
     static Move get_move(State *state, int depth);

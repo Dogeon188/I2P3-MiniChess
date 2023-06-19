@@ -1,5 +1,5 @@
-#include "../state/state.hpp"
 #include "./abprune_nnue.hpp"
+#include "../state/state.hpp"
 
 #define NEGINF -1000000
 #define POSINF 1000000
@@ -10,62 +10,50 @@
  * @param state Now state
  * @param depth search depth limit
  * @param isMax is maximizing player aka our AI
- * @param ᶐ alpha, best value for maximizing player
- * @param β beta, best value for minimizing player
+ * @param alpha alpha, best value for maximizing player
+ * @param beta beta, best value for minimizing player
  *
- * @return pair(stateValue, move)
+ * @return stateValue
  */
-std::pair<int, Move> ABPruneNNUE::_get_move(State *state, int depth, int ᶐ, int β, bool isMax) {
-    if (!state->legal_actions.size())
-        state->get_legal_actions();
+float ABPruneNNUE::_evaluate(State *state, int depth, int alpha, int beta, bool isMax) {
+    if (!state->legal_actions.size()) state->get_legal_actions();
 
-    if (state->game_state == WIN) {
-        return std::make_pair(isMax ? POSINF : NEGINF, state->legal_actions.back());
-    }
+    if (state->game_state == WIN)
+        return isMax ? POSINF : NEGINF;
     // we don't quite want draw
-    if (state->game_state == DRAW) {
-        return std::make_pair(isMax ? -5000 : 5000, state->legal_actions.back());
-    }
-    if (depth == 0) {
-        // negative when calculation is based on opponent
-        // use HCE to evaluate
-        return std::make_pair(state->evaluateNNUE() * (isMax ? 1 : -1), state->legal_actions.back());
-    }
+    if (state->game_state == DRAW)
+        return isMax ? -5000 : 5000;
+    // negative when calculation is based on opponent
+    // use HCE to evaluate
+    if (depth == 0)
+        return state->evaluateNNUE() * (isMax ? 1 : -1);
 
     int best_value = isMax ? NEGINF : POSINF;
-    Move best_move = state->legal_actions[0];   // avoid output 0 0 0 0
+    // Move best_move = state->legal_actions[0];   // avoid output 0 0 0 0
     if (isMax) {
         // reverse iterate since win move is put at last
         for (auto it = state->legal_actions.rbegin(); it != state->legal_actions.rend(); it++) {
             auto next_state = state->next_state(*it);
-            auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            auto value = _evaluate(next_state, depth - 1, alpha, beta, !isMax);
             delete next_state;
-            if (value > best_value) {
-                best_value = value;
-                best_move = *it;
-            }
-            if (best_value > ᶐ)
-                ᶐ = best_value;
-            if (ᶐ >= β)
-                return std::make_pair(best_value, best_move);   // alpha cut-off
+            if (value > best_value) best_value = value;
+            if (best_value > alpha) alpha = best_value;
+            if (alpha >= beta)
+                return best_value;   // alpha cut-off
         }
     } else {
         // non-reverse iterate
         for (auto &action : state->legal_actions) {
             auto next_state = state->next_state(action);
-            auto value = _get_move(next_state, depth - 1, ᶐ, β, !isMax).first;
+            auto value = _evaluate(next_state, depth - 1, alpha, beta, !isMax);
             delete next_state;
-            if (value < best_value) {
-                best_value = value;
-                best_move = action;
-            }
-            if (best_value < β)
-                β = best_value;
-            if (β <= ᶐ)
-                return std::make_pair(best_value, best_move);   // beta cut-off
+            if (value < best_value) best_value = value;
+            if (best_value < beta) beta = best_value;
+            if (beta <= alpha)
+                return best_value;   // beta cut-off
         }
     }
-    return std::make_pair(best_value, best_move);
+    return best_value;
 }
 
 /**
@@ -76,5 +64,29 @@ std::pair<int, Move> ABPruneNNUE::_get_move(State *state, int depth, int ᶐ, in
  * @return Move
  */
 Move ABPruneNNUE::get_move(State *state, int depth) {
-    return _get_move(state, depth, NEGINF, POSINF, true).second;
+    if (!state->legal_actions.size())
+        state->get_legal_actions();
+
+    if (state->game_state == WIN) return state->legal_actions.back();
+    if (state->game_state == DRAW) return state->legal_actions.back();
+
+    int best_value = NEGINF;
+    int alpha = NEGINF;
+    int beta = POSINF;
+
+    Move best_move = state->legal_actions[0];   // avoid output 0 0 0 0
+    // reverse iterate since win move is put at last
+    for (auto it = state->legal_actions.rbegin(); it != state->legal_actions.rend(); it++) {
+        auto next_state = state->next_state(*it);
+        auto value = _evaluate(next_state, depth - 1, alpha, beta, false);
+        delete next_state;
+        if (value > best_value) {
+            best_value = value;
+            best_move = *it;
+        }
+        if (best_value > alpha) alpha = best_value;
+        if (alpha >= beta)
+            return best_move;
+    }
+    return best_move;
 }
