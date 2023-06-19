@@ -14,6 +14,7 @@ STATE_SOURCE = $(SOURCES_DIR)/state/state.cpp
 POLICY_DIR = $(SOURCES_DIR)/policy
 
 TARGET_PLAYER = $(PLAYERS:$(SOURCES_DIR)/player/%.cpp=%)
+TARGET_PLAYER_MIXED = mixed
 TARGET_MAIN = main
 TARGET_OTHER = selfplay benchmark
 TARGET_UNITTEST = $(UNITTESTS:$(UNITTEST_DIR)/%.cpp=%)
@@ -33,6 +34,8 @@ $(BUILD_DIR):
 ifeq ($(OS), Windows_NT)
 $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@.exe $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
+$(TARGET_PLAYER_MIXED): % : $(SOURCES_DIR)/player/%.cpp
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/%.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@.exe $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
@@ -42,6 +45,8 @@ $(TARGET_UNITTEST): %: $(UNITTEST_DIR)/%.cpp
 else
 $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@ $(STATE_SOURCE) $(POLICY_DIR)/$@.cpp $< 
+$(TARGET_PLAYER_MIXED): % : $(SOURCES_DIR)/player/%.cpp
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/$@ $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@ $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp
