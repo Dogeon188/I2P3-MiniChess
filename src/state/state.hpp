@@ -64,6 +64,7 @@ public:
 
     int evaluatePSS();
     int evaluateHCE();
+    int evaluateNNUE();
     State *next_state(Move move);
     void get_legal_actions();
     std::string encode_output();

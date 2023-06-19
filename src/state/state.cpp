@@ -46,7 +46,8 @@ static const int move_table_king[8][2] = {
     { -1, -1 },
 };
 
-// [TODO] design your own evaluation function
+static const int piece_value[MAX_PIECE] = { 0, 2, 6, 7, 8, 20, 300 };
+
 /**
  * @brief 1st iteration: naive approach,
  * different piece has different score,
@@ -55,7 +56,6 @@ static const int move_table_king[8][2] = {
  * @return sum of piece score
  */
 //                                    P♟R♜ N♞B♝ Q♛  K♚
-static const int piece_value[MAX_PIECE] = { 0, 2, 6, 7, 8, 20, 300 };
 int State::evaluatePSS() {
     int value = 0;
     for (int i = 0; i < BOARD_H; i += 1) {
@@ -75,6 +75,11 @@ int State::evaluatePSS() {
     return value;
 }
 
+/**
+ * @brief evaluate if king is threatened
+ * @param player 0 -> white, 1 -> black
+ * @return number of pieces threatens the king
+ */
 int State::_evaluateKingThreat(int player) {
     int value = 0;
     const auto &kingPos = this->board.king[player];
@@ -128,6 +133,10 @@ int State::_evaluateKingThreat(int player) {
 #define HCE_MOBILITY_WEIGHT 16   // divided instead of multiplied
 #define HCE_KINGTHREAT_WEIGHT 1
 
+/**
+ * @brief 2nd iteration: handcrafted evaluation,
+ * added mobility and king threat.
+ */
 int State::evaluateHCE() {
     int value = 0;
     // piece score
@@ -144,6 +153,16 @@ int State::evaluateHCE() {
     }
 #endif
     return value;
+}
+
+/**
+ * @brief 3rd iteration: neural network
+ * @return nnue returned score
+ */
+int State::evaluateNNUE() {
+    // efficiently updatable neural network evaluation
+
+    return 0;
 }
 
 /**
