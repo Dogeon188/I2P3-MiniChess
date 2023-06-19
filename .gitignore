@@ -9,4 +9,5 @@ document/
 *.sh
 TODO.md
 !state/
+*.swp
 ~$*

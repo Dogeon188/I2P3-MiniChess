@@ -23,7 +23,7 @@ int main() {
 
                 auto start = std::chrono::high_resolution_clock::now();
 
-                maxscore = std::max(maxscore, next_state->evaluateHCE());
+                maxscore = std::max((float)maxscore, next_state->evaluateHCE());
 
                 auto end = std::chrono::high_resolution_clock::now();
                 sum += std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();

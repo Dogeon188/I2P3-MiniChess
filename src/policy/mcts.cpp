@@ -1,8 +1,8 @@
 #include "./mcts.hpp"
 #include "../state/state.hpp"
-#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <random>
 
 #define NEG_INF -1000000
 #define POS_INF 1000000
@@ -68,9 +68,9 @@ int MCTS::evaluateAB(State *state, int asPlayer, int depth, int alpha, int beta)
             return 0;
         }
     }
-    if (depth == 0) return state->evaluatePSS();
+    if (depth == 0) return state->evaluatePSS() * (state->player == asPlayer ? 1 : -1);
     state->get_legal_actions();
-    if (state->legal_actions.empty()) return state->evaluatePSS();
+    if (state->legal_actions.empty()) return state->evaluatePSS() * (state->player == asPlayer ? 1 : -1);
     if (state->player == asPlayer) {
         int maxScore = NEG_INF;
         for (auto &a : state->legal_actions) {
@@ -97,7 +97,11 @@ int MCTS::evaluateAB(State *state, int asPlayer, int depth, int alpha, int beta)
 }
 
 #define SIM_POLICY 0
-#define SIM_DEPTH 50
+#define SIM_DEPTH 200
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
+static std::uniform_real_distribution<> dis(0, 1);
 /**
  * @brief simulate a game until it ends
  * @return 0 if draw, positive if win, negative if lose
@@ -108,7 +112,7 @@ float MCTS::simulate(State *_state, int asPlayer, int depth = SIM_DEPTH) {
     while (state->game_state != GameState::WIN && depth--) {
         if (state->legal_actions.empty()) state->get_legal_actions();
 #if SIM_POLICY == 0   // random
-        auto action = state->legal_actions[rand() % state->legal_actions.size()];
+        auto action = state->legal_actions[dis(gen) * state->legal_actions.size()];
         auto *nextState = state->next_state(action);
         delete state;
         state = nextState;
@@ -209,6 +213,7 @@ Move MCTS::get_move(State *state, int iteration, int generation, std::ofstream &
         // write to file
         fout << bestMove.first.first << " " << bestMove.first.second << " "
              << bestMove.second.first << " " << bestMove.second.second << std::endl;
+        fout.flush();
     }
     auto bestMove = getBestMove(root);
     delete root;

@@ -63,7 +63,7 @@ public:
     State(State *state) : board(state->board), player(state->player){};
 
     int evaluatePSS();
-    float evaluateHCE(float mobilityWeight, float kingThreatWeight);
+    float evaluateHCE(float mobilityWeight = 0.0625, float kingThreatWeight = 1);
     State *next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
