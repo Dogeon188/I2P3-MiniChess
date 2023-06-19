@@ -46,7 +46,6 @@ static const int move_table_king[8][2] = {
     { -1, -1 },
 };
 
-// [TODO] design your own evaluation function
 /**
  * @brief 1st iteration: naive approach,
  * different piece has different score,
@@ -128,6 +127,11 @@ int State::_evaluateKingThreat(int player) {
 #define HCE_MOBILITY_WEIGHT 16   // divided instead of multiplied
 #define HCE_KINGTHREAT_WEIGHT 1
 
+/**
+ * @brief 2nd iteration: heuristic approach,
+ * added mobility and king threat.
+ * @return PSS + (MOB / MOB_WEIGHT) + (KT * KT_WEIGHT)
+ */
 int State::evaluateHCE() {
     int value = 0;
     // piece score

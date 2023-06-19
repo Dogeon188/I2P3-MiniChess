@@ -12,8 +12,6 @@ MCTNode::MCTNode(State *state, Move from, MCTNode *parent) {
     this->from = from;
     this->parent = parent;
     if (state->legal_actions.empty()) state->get_legal_actions();
-    // randomize legal actions
-    std::random_shuffle(this->state->legal_actions.begin(), this->state->legal_actions.end());
 }
 
 MCTNode *MCTNode::getBestChild() {
@@ -115,14 +113,14 @@ float MCTS::simulate(State *_state, int asPlayer, int depth = SIM_DEPTH) {
         delete state;
         state = nextState;
 #elif SIM_POLICY == 1   // greedy
-        auto bestNextState = state->next_state(state->legal_actions[0]);
-        int maxScore = NEG_INF;
+        State *bestNextState = nullptr;
+        int bestScore = NEG_INF;
         for (auto &a : state->legal_actions) {
             auto nextState = state->next_state(a);
-            int score = nextState->evaluatePSS();
-            if (score > maxScore) {
-                maxScore = score;
-                delete bestNextState;
+            int score = -nextState->evaluatePSS();
+            if (score > bestScore) {
+                bestScore = score;
+                if (bestNextState) delete bestNextState;
                 bestNextState = nextState;
             } else {
                 delete nextState;
@@ -153,27 +151,29 @@ float MCTS::simulate(State *_state, int asPlayer, int depth = SIM_DEPTH) {
     //     winner = state->player;
     // } else {
     //     int score = state->evaluatePSS();
-    //     if (score == 0) return 0.3;
+    //     if (score == 0) return 0.5;
     //     winner = score > 0 ? state->player : 1 - state->player;
     // }
     // delete state;
-    // return winner == asPlayer ? 1 : 0;
+    // return winner == asPlayer ? 1.0 : 0.0;
 
     float score = (float)state->evaluatePSS() / 100.0;
+    score = state->player == asPlayer ? score : -score;
     delete state;
-    return state->player == asPlayer ? score : -score;
+    return score;
 }
 
-/*
 void PrintTree(MCTNode *root, int indent = 0) {
+    if (indent >= 2) return;
     for (int i = 0; i < indent; i++) std::cout << "  ";
     std::cout << "(" << root->from.first.first << "," << root->from.first.second << " -> " << root->from.second.first << "," << root->from.second.second << ")";
-    std::cout << " " << root->win_score << "/" << root->visit_count << std::endl;
+    std::cout << " " << root->win_score << "/" << root->visit_count;
+    if (root->parent) std::cout << " " << root->calculateUCB();
+    std::cout << std::endl;
     for (auto &child : root->children) {
         PrintTree(child, indent + 1);
     }
 }
-*/
 
 Move MCTS::getBestMove(const MCTNode *root) {
     Move bestMove;
@@ -203,6 +203,7 @@ Move MCTS::get_move(State *state, int iteration, int generation, std::ofstream &
         }
 
         // PrintTree(root);
+
         // get best move
         auto bestMove = getBestMove(root);
         // write to file

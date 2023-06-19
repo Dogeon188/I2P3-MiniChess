@@ -2,7 +2,7 @@
 #include "../state/state.hpp"
 #include <cmath>
 
-#define UCB_C 2   // C^2
+#define UCB_C 1.3862943611198906   // C^2
 
 class MCTNode {
 public:
