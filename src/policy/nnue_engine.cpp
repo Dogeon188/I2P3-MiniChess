@@ -61,6 +61,10 @@ Vector& Layer::feed(const Vector &vec) {
     return output;
 }
 
+std::pair<Matrix, Matrix> Layer::backPropagate(const Vector &delta, const Vector &input, Vector &inputDiff, float learningRate) {
+    // TODO implement
+}
+
 void Layer::randomize() {
     for (uint64_t i = 0; i < weights.rows; i++) {
         for (uint64_t j = 0; j < weights.cols; j++) {

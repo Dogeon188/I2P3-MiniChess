@@ -5,6 +5,7 @@
 
 namespace NNUE {
     class Vector {
+    protected:
         friend class Matrix;
         friend class Layer;
         friend class Network;
@@ -26,6 +27,8 @@ namespace NNUE {
         Vector &operator[](int i) { return data[i]; }
 
     public:
+        // TODO change to row major
+        Matrix() : rows(0), cols(0) {}
         Matrix(int rows, int cols);
         Matrix(const std::vector<std::vector<float>> &data);
         Vector operator*(const Vector &vec) const;
@@ -37,17 +40,24 @@ namespace NNUE {
         Matrix weights;
         Vector bias;
         Vector output;
-        // just implement the activation from Yu Nasu's paper
+
+    public:
+        // just implement the activation i.e. clipped ReLu from Yu Nasu's paper
         float activation(float in) {
             if (in < 0) return 0;
             if (in > 1) return 1;
             return in;
         }
-
-    public:
+        float activationDerivative(float in) {
+            if (in < 0) return 0;
+            if (in > 1) return 0;
+            return 1;
+        }
         Layer(int inputSize, int outputSize) : weights(outputSize, inputSize), bias(outputSize), output(outputSize) {}
-        // Layer(const Matrix &weights, const std::vector<float> &bias) : weights(weights), bias(bias) {}
+
         Vector &feed(const Vector &vec);
+        std::pair<Matrix, Matrix> backPropagate(const Vector &delta, const Vector &input, Vector &inputDiff, float learningRate);
+
         void randomize();
         void load(std::ifstream &filename);
         void write(std::ofstream &filename) const;

@@ -4,17 +4,8 @@
 
 #include "../config.hpp"
 #include "./state.hpp"
+#include "../policy/nnue_network.hpp"
 
-enum Piece : int8_t {
-    EMPTY = 0,
-    PAWN = 1,
-    ROOK = 2,
-    KNIGHT = 3,
-    BISHOP = 4,
-    QUEEN = 5,
-    KING = 6,
-    MAX_PIECE
-};
 static const int move_table_rook_bishop[8][7][2] = {
     { { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } },
     { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 0, -4 }, { 0, -5 }, { 0, -6 }, { 0, -7 } },
@@ -159,10 +150,8 @@ int State::evaluateHCE() {
  * @brief 3rd iteration: neural network
  * @return nnue returned score
  */
-int State::evaluateNNUE() {
-    // efficiently updatable neural network evaluation
-
-    return 0;
+float State::evaluateNNUE() {
+    return NNUE::Network::getInstance().evaluate(this);
 }
 
 /**

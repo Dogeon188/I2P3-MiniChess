@@ -41,6 +41,17 @@ enum GameState {
     NONE
 };
 
+enum Piece : int8_t {
+    EMPTY = 0,
+    PAWN = 1,
+    ROOK = 2,
+    KNIGHT = 3,
+    BISHOP = 4,
+    QUEEN = 5,
+    KING = 6,
+    MAX_PIECE
+};
+
 class State {
     int _evaluateKingThreat(int player);
 
@@ -64,7 +75,7 @@ public:
 
     int evaluatePSS();
     int evaluateHCE();
-    int evaluateNNUE();
+    float evaluateNNUE();
     State *next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
