@@ -8,8 +8,8 @@
 
 static const int MINIMAX_DEPTHS[] = { 6, 8, 10, 11 };
 
-#define MCTS_ITERATION 500000
-#define MCTS_GENERATION 20
+#define MCTS_ITERATION 60000
+#define MCTS_GENERATION 10
 
 State *root = nullptr;
 
@@ -36,31 +36,32 @@ void read_board(std::ifstream &fin) {
     root->get_legal_actions();
 }
 
+static bool isInitialBoard(State *state) {
+    int pieceCount = 0;
+    for (int i = 0; i < BOARD_H; i++) {
+        for (int j = 0; j < BOARD_W; j++) {
+            if (state->board.board[state->player][i][j]) pieceCount++;
+            if (state->board.board[1 - state->player][i][j]) pieceCount++;
+        }
+    }
+    return pieceCount > 14;
+}
+
 /**
  * @brief randomly choose a move and then write it into output file
  *
  * @param fout
  */
 void write_valid_spot(std::ofstream &fout) {
-    int pieceCount = 0;
-    for (int i = 0; i < BOARD_H; i++) {
-        for (int j = 0; j < BOARD_W; j++) {
-            if (root->board.board[root->player][i][j]) pieceCount++;
-            if (root->board.board[1 - root->player][i][j]) pieceCount++;
+    if (isInitialBoard(root)) {
+        for (auto depth : MINIMAX_DEPTHS) {
+            auto move = ABPruneHCE::get_move(root, depth);
+            fout << move.first.first << " " << move.first.second << " "
+                 << move.second.first << " " << move.second.second << std::endl;
+            fout.flush();
         }
-    }
-    if (pieceCount > 16) {
-        auto move = MCTS::get_move(root, MCTS_ITERATION, MCTS_GENERATION, fout);
-        fout << move.first.first << " " << move.first.second << " "
-             << move.second.first << " " << move.second.second << std::endl;
-        fout.flush();
-        return;
-    }
-    for (auto depth : MINIMAX_DEPTHS) {
-        auto move = ABPruneHCE::get_move(root, depth);
-        fout << move.first.first << " " << move.first.second << " "
-             << move.second.first << " " << move.second.second << std::endl;
-        fout.flush();
+    } else {
+        MCTS::get_move(root, MCTS_ITERATION, MCTS_GENERATION, fout);
     }
 }
 

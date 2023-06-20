@@ -2,7 +2,7 @@
 #include "../state/state.hpp"
 #include <cmath>
 
-#define UCB_C 1.3862943611198906   // C^2
+#define UCB_C 2   // C^2
 
 class MCTNode {
 public:
@@ -22,8 +22,8 @@ public:
     MCTNode *getBestChild();
     MCTNode *select();
     MCTNode *expand();
-    void update(float result);
-    void backPropagate(float result);
+    void update(float result, int asPlayer);
+    void backPropagate(float result, int asPlayer);
 
     // win or draw
     bool isTerminal() { return this->state->game_state != GameState::NONE; }

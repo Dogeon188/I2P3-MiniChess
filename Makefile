@@ -38,7 +38,7 @@ $(TARGET_PLAYER): % : $(SOURCES_DIR)/player/%.cpp
 $(TARGET_PLAYER_MIXED): % : $(SOURCES_DIR)/player/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/player/%.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $<
 $(TARGET_SUBMISSION):
-	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/submission.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $(SOURCES_DIR)/player/abprune_hce.cpp
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/submission.exe $(STATE_SOURCE) $(POLICY_DIR)/*.cpp $(SOURCES_DIR)/player/abprune_pss.cpp
 $(TARGET_MAIN): % : $(SOURCES_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$@.exe $< 
 $(TARGET_OTHER): %: $(SOURCES_DIR)/%.cpp

@@ -47,15 +47,16 @@ MCTNode *MCTNode::expand() {
     return newChild;
 }
 
-void MCTNode::update(float result) {
+void MCTNode::update(float result, int asPlayer) {
     this->visit_count++;
+    if (this->state->player == asPlayer) result = 1 - result;
     this->win_score += result;
 }
 
-void MCTNode::backPropagate(float result) {
+void MCTNode::backPropagate(float result, int asPlayer) {
     MCTNode *node = this;
     while (node != nullptr) {
-        node->update(result);
+        node->update(result, asPlayer);
         node = node->parent;
     }
 }
@@ -102,6 +103,7 @@ int MCTS::evaluateAB(State *state, int asPlayer, int depth, int alpha, int beta)
 static std::random_device rd;
 static std::mt19937 gen(rd());
 static std::uniform_real_distribution<> dis(0, 1);
+
 /**
  * @brief simulate a game until it ends
  * @return 0 if draw, positive if win, negative if lose
@@ -150,21 +152,21 @@ float MCTS::simulate(State *_state, int asPlayer, int depth = SIM_DEPTH) {
         state = bestNextState;
 #endif
     }
-    // int winner;
-    // if (state->game_state == GameState::WIN) {
-    //     winner = state->player;
-    // } else {
-    //     int score = state->evaluatePSS();
-    //     if (score == 0) return 0.5;
-    //     winner = score > 0 ? state->player : 1 - state->player;
-    // }
-    // delete state;
-    // return winner == asPlayer ? 1.0 : 0.0;
-
-    float score = (float)state->evaluatePSS() / 100.0;
-    score = state->player == asPlayer ? score : -score;
+    int winner;
+    if (state->game_state == GameState::WIN) {
+        winner = state->player;
+    } else {
+        int score = state->evaluatePSS();
+        if (score == 0) return 0.5;
+        winner = score > 0 ? state->player : 1 - state->player;
+    }
     delete state;
-    return score;
+    return winner == asPlayer ? 1.0 : 0.0;
+
+    // float score = (float)state->evaluatePSS() / 100.0;
+    // score = state->player == asPlayer ? score : -score;
+    // delete state;
+    // return score;
 }
 
 void PrintTree(MCTNode *root, int indent = 0) {
@@ -183,7 +185,7 @@ Move MCTS::getBestMove(const MCTNode *root) {
     Move bestMove;
     float best_score = NEG_INF;
     for (auto &child : root->children) {
-        auto score = child->win_score / child->visit_count;
+        auto score = child->visit_count;
         if (score > best_score) {
             best_score = score;
             bestMove = child->from;
@@ -203,7 +205,7 @@ Move MCTS::get_move(State *state, int iteration, int generation, std::ofstream &
             MCTNode *node = root->select();                   // selection
             if (!node->isTerminal()) node = node->expand();   // expansion
             float result = simulate(node->state, asPlayer);   // simulation
-            node->backPropagate(result);                      // back propagation
+            node->backPropagate(result, asPlayer);                      // back propagation
         }
 
         // PrintTree(root);
